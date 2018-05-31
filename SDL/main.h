@@ -90,9 +90,9 @@ unsigned int tip[map_w][map_h][map_opt] = { { { 0 }, }, };
 double flt[map_w][map_h][map_opt] = { { { 0 }, }, };
 
 enum { mp_geo, mp_con, mp_contient};
-enum { fl_food, fl_mat, fl_cst,
+enum { fl_food, fl_mat, fl_cst, 
 	fl_sun, fl_moon,
-	fl_height, fl_heat, //Solid
+	fl_height, fl_heat, fl_mass, fl_press, fl_angle, fl_speed,//Solid
 	fl_wat, fl_wat_angle, fl_wat_speed, fl_wat_heat, fl_wat_mat, //Water
 	fl_gas, fl_gas_angle, fl_gas_heat //Gas
 };
