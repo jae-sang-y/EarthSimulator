@@ -2,6 +2,7 @@
 
 int main(int argc, char* args[])
 {
+	srand(time(NULL));
 	system("color 01");
 	LOG_H("Hello");
 	if (!init())
@@ -38,8 +39,8 @@ void step()
 {
 	map_step();
 	T = (++T) % T_max;
-	time = (time + 0.003);
-	if (time > 1) { time -= 1; }
+	the_time = (the_time + 0.003);
+	if (the_time > 1) { the_time -= 1; }
 	//Mix_PlayMusic(gMusic, 0);
 }
 void draw()
@@ -173,19 +174,19 @@ bool loadMedia()
 			sprite_surf[a] = IMG_Load((currentDir + "\\" + sprite_file[a]).c_str());
 			if (sprite_surf[a] == NULL)
 			{
-				LOG_W("SPRITE_FILE is CORRUPT in " + to_string(a) + "\n" + currentDir + "\\" + sprite_file[a] + "\n");
+				LOG_W("SPRITE_FILE is CORRUPT in " + std::to_string(a) + "\n" + currentDir + "\\" + sprite_file[a] + "\n");
 				success = false;
 			}
 			else
 			{
 				//SDL_SetColorKey(sprite_surf[2], SDL_TRUE, SDL_MapRGB(sprite_surf[2]->format, 0, 0, 0));
 				SDL_SetColorKey(sprite_surf[a], SDL_TRUE, SDL_MapRGB(sprite_surf[a]->format, 0, 0, 0));
-				LOG_O(("SPRITE_FILE is LOADED in " + to_string(a)));
+				LOG_O(("SPRITE_FILE is LOADED in " + std::to_string(a)));
 
 				sprite[a] = SDL_CreateTextureFromSurface(REND, sprite_surf[a]);
 				if (sprite[a] == NULL)
 				{
-					LOG_W("FAILED MAKE TEXTURE in " + to_string(a), SDL_GetError());
+					LOG_W("FAILED MAKE TEXTURE in " + std::to_string(a), SDL_GetError());
 					success = false;
 				}
 				else
@@ -196,7 +197,7 @@ bool loadMedia()
 		}
 		else
 		{
-			LOG_A(("SPRITE_FILE is EMPTY in " + to_string(a)));
+			LOG_A(("SPRITE_FILE is EMPTY in " + std::to_string(a)));
 		}
 	}
 	map_set();
@@ -241,51 +242,51 @@ Uint32 color(int r, int g, int b)
 	return r * 65536 + g * 256 + b;
 }
 
-void LOG_A(string s)
+void LOG_A(std::string s)
 {
-	cout << ESCAPE << "[1;33m[Attention]" << ESCAPE << "[1;37m " << s << "\n";
-	//cout << ESCAPE << "[1;30m" << "Hello!" << "\n";//Black
-	//cout << ESCAPE << "[1;31m" << "Hello!" << "\n";//Red
-	//cout << ESCAPE << "[1;32m" << "Hello!" << "\n";//Green
-	//cout << ESCAPE << "[1;33m" << "Hello!" << "\n";//Yellow
-	//cout << ESCAPE << "[1;34m" << "Hello!" << "\n";//Blue
-	//cout << ESCAPE << "[1;35m" << "Hello!" << "\n";//Purple
-	//cout << ESCAPE << "[1;36m" << "Hello!" << "\n";//SkyBlue
-	//cout << ESCAPE << "[1;37m" << "Hello!" << "\n";
-	//cout << ESCAPE << "[1;93m" << "Hello!" << "\n";
+	std::cout << ESCAPE << "[1;33m[Attention]" << ESCAPE << "[1;37m " << s << "\n";
+	//std::cout << ESCAPE << "[1;30m" << "Hello!" << "\n";//Black
+	//std::cout << ESCAPE << "[1;31m" << "Hello!" << "\n";//Red
+	//std::cout << ESCAPE << "[1;32m" << "Hello!" << "\n";//Green
+	//std::cout << ESCAPE << "[1;33m" << "Hello!" << "\n";//Yellow
+	//std::cout << ESCAPE << "[1;34m" << "Hello!" << "\n";//Blue
+	//std::cout << ESCAPE << "[1;35m" << "Hello!" << "\n";//Purple
+	//std::cout << ESCAPE << "[1;36m" << "Hello!" << "\n";//SkyBlue
+	//std::cout << ESCAPE << "[1;37m" << "Hello!" << "\n";
+	//std::cout << ESCAPE << "[1;93m" << "Hello!" << "\n";
 }
-void LOG_W(string s)
+void LOG_W(std::string s)
 {
-	cout << ESCAPE << "[1;31m[Warning]" << ESCAPE << "[1;37m " << s << "\n";
+	std::cout << ESCAPE << "[1;31m[Warning]" << ESCAPE << "[1;37m " << s << "\n";
 }
-void LOG_H(string s)
+void LOG_H(std::string s)
 {
-	cout << ESCAPE << "[1;34m[Info]" << ESCAPE << "[1;37m " << s << "\n";
+	std::cout << ESCAPE << "[1;34m[Info]" << ESCAPE << "[1;37m " << s << "\n";
 }
-void LOG_O(string s)
+void LOG_O(std::string s)
 {
-	cout << ESCAPE << "[1;32m[OK]" << ESCAPE << "[1;37m " << s << "\n";
+	std::cout << ESCAPE << "[1;32m[OK]" << ESCAPE << "[1;37m " << s << "\n";
 }
-void LOG_A(string s, string s2)
+void LOG_A(std::string s, std::string s2)
 {
-	cout << ESCAPE << "[1;33m[Info]" << ESCAPE << "[1;37m " << s << " : " << s2 << "\n";
+	std::cout << ESCAPE << "[1;33m[Info]" << ESCAPE << "[1;37m " << s << " : " << s2 << "\n";
 }
-void LOG_W(string s, string s2)
+void LOG_W(std::string s, std::string s2)
 {
-	cout << ESCAPE << "[1;31m[Warning]" << ESCAPE << "[1;37m " << s << " : " << s2 << "\n";
+	std::cout << ESCAPE << "[1;31m[Warning]" << ESCAPE << "[1;37m " << s << " : " << s2 << "\n";
 }
-void LOG_H(string s, string s2)
+void LOG_H(std::string s, std::string s2)
 {
-	cout << ESCAPE << "[1;34m[Info]" << ESCAPE << "[1;37m " << s << " : " << s2 << "\n";
+	std::cout << ESCAPE << "[1;34m[Info]" << ESCAPE << "[1;37m " << s << " : " << s2 << "\n";
 }
-void LOG_O(string s, string s2)
+void LOG_O(std::string s, std::string s2)
 {
-	cout << ESCAPE << "[1;33m[OK]" << ESCAPE << "[1;37m " << s << " : " << s2 << "\n";
+	std::cout << ESCAPE << "[1;33m[OK]" << ESCAPE << "[1;37m " << s << " : " << s2 << "\n";
 }
 void LOG_Stop()
 {
-	string a;
-	cout << "Press Any Key to Continue...";
+	std::string a;
+	std::cout << "Press Any Key to Continue...";
 	getchar();
 	return;
 }
