@@ -32,6 +32,21 @@ void event(SDL_Event *e)
 			case SDLK_4: {
 				mgr = 4;
 			}break;
+			case SDLK_5: {
+				mgr = 5;
+			}break;
+			case SDLK_6: {
+				mgr = 6;
+			}break;
+			case SDLK_7: {
+				mgr = 7;
+			}break;
+			case SDLK_8: {
+				mgr = 8;
+			}break;
+			case SDLK_9: {
+				mgr = 9;
+			}break;
 			}
 		}break;
 		}
@@ -51,7 +66,7 @@ void map_set()
 				flt[a][b][i] = random();
 			}
 			flt[a][b][fl_height] = flt[a][b][fl_height] * 2 - 1;
-			flt[a][b][fl_wat] = (flt[a][b][fl_wat] - 0.65) / 2;
+			flt[a][b][fl_wat] = (flt[a][b][fl_wat] - 0.55) / 2;
 			flt[a][b][fl_wat_angle] = M_PI;
 		}
 	}
@@ -109,30 +124,30 @@ void map_step()
 					
 					if (flt[a][b][fl_wat] > 0)
 					{
-						tmp2[0] = flt[a][b][fl_wat_angle];
-						tmp2[1] = w * M_PI / 4;
-						tmp2[2] = 0;
-						if (abs(tmp2[0] - tmp2[1]) < (M_PI / 2))
-						{
-							tmp2[2] = ((1 - (abs(tmp2[0] - tmp2[1]) / (M_PI / 2)))) / 2;
-						}
-						else if (abs(tmp2[0] - tmp2[1]) > (M_PI / 2 * 3))
-						{
-							tmp2[2] = ((1 - ((2 * M_PI - abs(tmp2[0] - tmp2[1])) / (M_PI / 2)))) / 2;
-						}
+						tmp2[2] = dir_force(flt[a][b][fl_wat_angle], w * M_PI / 4);
+
 						tmp2[0] = flt[a][b][fl_wat];// *tanh(flt[a][b][fl_height] / flt[c][d][fl_height]);
-						tmp2[1] = 1;
+						tmp2[1] = 0.5;
 
 						flt[c][d][fl_wat] += tmp2[0] * tmp2[1] * tmp2[2];
 						flt[a][b][fl_wat] -= tmp2[0] * tmp2[1] * tmp2[2];
 
+						tmp2[1] = 2;
 						tmp2[3] = ((flt[a][b][fl_height] + flt[a][b][fl_wat]) - (flt[c][d][fl_height] + flt[c][d][fl_wat])) / 2;
 						tmp2[0] = tmp2[0] * tmp2[1] * tmp2[2];
-						flt[c][d][fl_height] += tmp2[0] * tmp2[3];
-						flt[a][b][fl_height] -= tmp2[0] * tmp2[3];
+						flt[c][d][fl_height] += tmp2[0] * tmp2[3] * tmp2[1];
+						flt[a][b][fl_height] -= tmp2[0] * tmp2[3] * tmp2[1];
 
 					}
 
+					if (flt[a][b][fl_wat] > 0)
+					{
+						tmp2[0] = 0;
+
+						if (flt[a][b][fl_gas] > 0) {
+							flt[a][b][fl_wat] -= 0.00001 * pow(flt[a][b][fl_sun], 2);
+						}
+					}
 					/*
 					if (false && flt[a][b][fl_height] + flt[a][b][fl_wat] > flt[c][d][fl_height] + flt[c][d][fl_wat] && flt[a][b][fl_wat] > 0)
 					{
@@ -147,8 +162,9 @@ void map_step()
 					}*/
 				}
 			}
+			flt[a][b][fl_sun] = (sin((a + time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
+
 			in_1_1(&flt[a][b][fl_height]);
-			flt[a][b][fl_wat_angle] = (flt[a][b][fl_wat_angle] + 0.2);
 			while (flt[a][b][fl_wat_angle] > M_PI * 2)
 			{
 				flt[a][b][fl_wat_angle] -= M_PI * 2;
@@ -202,6 +218,12 @@ void map_color(unsigned char *c, int a ,int b)
 
 		//ÃÊ ->³ë ->°¥ ->º¸ ->Èò 
 		//.00->.25->.50->.75->1.00
+	}
+	else if (mgr == 5)
+	{
+		set_color(mgr_a, 255, 255, 255, 255);
+		set_color(mgr_b, 255, 0, 0, 255);
+		merge_color(c, mgr_a, mgr_b, flt[a][b][fl_sun]);
 	}
 	else
 	{

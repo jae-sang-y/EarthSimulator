@@ -38,6 +38,8 @@ void step()
 {
 	map_step();
 	T = (++T) % T_max;
+	time = (time + 0.003);
+	if (time > 1) { time -= 1; }
 	//Mix_PlayMusic(gMusic, 0);
 }
 void draw()

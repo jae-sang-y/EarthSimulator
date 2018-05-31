@@ -43,3 +43,16 @@ void set_color(unsigned char *c, unsigned char r, unsigned char g, unsigned char
 	c[2] = b;
 	c[3] = a;
 }
+
+double dir_force(double a, double b)
+{
+	if (abs(a - b) < (M_PI / 2))
+	{
+		return ((1 - (abs(a - b) / (M_PI / 2)))) / 2;
+	}
+	else if (abs(a - b) > (M_PI / 2 * 3))
+	{
+		return ((1 - ((2 * M_PI - abs(a - b)) / (M_PI / 2)))) / 2;
+	}
+	return 0;
+}
