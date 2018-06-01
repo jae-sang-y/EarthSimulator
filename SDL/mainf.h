@@ -69,6 +69,7 @@ void map_set()
 			flt[a][b][fl_wat] = flt[a][b][fl_wat] / 2;// -0.5;
 			flt[a][b][fl_wat_angle] = M_PI;
 			flt[a][b][fl_wat_speed] = 1;
+			//tip[a][b][mp_contient] = rand() % cont_num;
 		}
 	}
 	for (int i = 0; i < cont_num; i++)
@@ -110,7 +111,7 @@ void map_step()
 					if (tip[a][b][mp_contient] > 0)
 					{
 						tmp2[1] = dir_force(flt[a][b][fl_angle], w * M_PI / 4) * flt[a][b][fl_speed];
-						if (tip[c][d][mp_contient] == 0 && flt[a][b][fl_mass] > 0.5 && tmp2[1] > 0)
+						if (tip[c][d][mp_contient] == 0 && flt[a][b][fl_mass] * (tmp2[1] + 1) >= 0.5)
 						{
 							tmp2[0] = reru(flt[a][b][fl_mass] / 2 + tmp2[1]);
 
@@ -130,7 +131,7 @@ void map_step()
 						}
 						if (tip[c][d][mp_contient] != tip[a][b][mp_contient] && flt[a][b][fl_mass] * flt[a][b][fl_press] > flt[c][d][fl_mass] * flt[c][d][fl_press] && tmp2[1] > 0)
 						{
-							if (flt[a][b][fl_mass] < 0.5)
+							if (flt[a][b][fl_mass] <= 0.5)
 							{
 								tmp2[2] = (flt[a][b][fl_mass] - flt[c][d][fl_mass]) / 4 * (flt[a][b][fl_press] / flt[c][d][fl_press]) + tmp2[1];
 
@@ -183,7 +184,7 @@ void map_step()
 					break;
 				}
 			}
-			if (flt[a][b][fl_height] > flt[c][d][fl_height] + 0.5)
+			if (flt[a][b][fl_height] > flt[c][d][fl_height] + 0.3)
 			{
 				tmp2[0] = (flt[a][b][fl_height]) - (flt[c][d][fl_height]);
 				tmp2[1] = 0.1;
@@ -198,10 +199,17 @@ void map_step()
 
 			if (flt[a][b][fl_press] != 1.0)
 			{
-				tmp2[0] = (flt[a][b][fl_press] - 1.0);
-				tmp2[1] = random() * 0.01;
+				tmp2[0] = (flt[a][b][fl_press] - 1.0) / (1 + flt[a][b][fl_wat]) * (1 - flt[a][b][fl_height]);
+				tmp2[1] = random() * 0.001;
 				flt[a][b][fl_press] -= tmp2[0] * tmp2[1];
 				flt[a][b][fl_height] += tmp2[0] * tmp2[1];
+			}
+			if (flt[a][b][fl_height] > 1.0)
+			{
+				tmp2[0] = (flt[a][b][fl_height] - 1.0);
+				tmp2[1] = 0.01;
+				flt[a][b][fl_mass] += tmp2[0] * tmp2[1];
+				flt[a][b][fl_height] -= tmp2[0] * tmp2[1];
 			}
 
 			flt[a][b][fl_sun] = (sin((a + the_time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
