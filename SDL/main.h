@@ -89,6 +89,7 @@ const unsigned int map_opt = 16;
 unsigned int tip[map_w][map_h][map_opt] = { { { 0 }, }, };
 double flt[map_w][map_h][map_opt] = { { { 0 }, }, };
 
+const int cont_num = 20;
 enum { mp_geo, mp_con, mp_contient};
 enum { fl_food, fl_mat, fl_cst, 
 	fl_sun, fl_moon,
