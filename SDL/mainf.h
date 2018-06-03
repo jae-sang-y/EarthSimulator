@@ -72,7 +72,8 @@ void map_step()
 			me_y = b;
 			for (int w = 0; w < 8; w++)
 			{
-				c = (a + mca_w[w][0] + map_w) % map_w;
+				//c = (a + mca_w[w][0] + map_w) % map_w;
+				c = a + mca_w[w][0];
 				d = b + mca_w[w][1];
 				if (c >= 0 && d >= 0 && c < map_w && d < map_h)
 				{

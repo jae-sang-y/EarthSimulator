@@ -33,10 +33,10 @@ void in0_255(unsigned char *p)
 void merge_color(unsigned char *c, unsigned char *d, unsigned char *e, double f)
 {
 	in0_1(&f);
-	c[0] = d[0] * (1 - f) + e[0] * f;
-	c[1] = d[1] * (1 - f) + e[1] * f;
-	c[2] = d[2] * (1 - f) + e[2] * f;
-	c[3] = d[3] * (1 - f) + e[3] * f;
+	c[0] = (unsigned char)(d[0] * (1 - f) + e[0] * f);
+	c[1] = (unsigned char)(d[1] * (1 - f) + e[1] * f);
+	c[2] = (unsigned char)(d[2] * (1 - f) + e[2] * f);
+	c[3] = (unsigned char)(d[3] * (1 - f) + e[3] * f);
 }
 void set_color(unsigned char *c, unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
@@ -85,9 +85,10 @@ double reru (double d)
 	return 0;
 }
 
-void hsv_to_rgb(unsigned char *c, double h)
+void hsv_to_rgb(unsigned char *cc, double h)
 {
 	double hh;
+	double c[3] = { 0.0, };
 	while (h >= 1) { h -= 1; }
 	if (h <= 1 / 6.0)
 	{
@@ -137,4 +138,8 @@ void hsv_to_rgb(unsigned char *c, double h)
 
 		c[2] = 255 * (1 - hh);
 	}
+	cc[0] = (unsigned char)c[0];
+	cc[1] = (unsigned char)c[1];
+	cc[2] = (unsigned char)c[2];
+	cc[3] = (unsigned char)c[3];
 }

@@ -46,12 +46,12 @@ void stair_height()
 		}
 	}
 }
-void water_flow()
+inline void water_flow()
 {
-	tmp2[0] = (eg(fl_height) + eg(fl_wat)) - (vs(fl_height) + vs(fl_wat));
+	tmp2[0] = (flt[me_x][me_y][fl_wat] + flt[me_x][me_y][fl_height]) - (flt[yu_x][yu_y][fl_wat] + flt[yu_x][yu_y][fl_height]);
 	if (tmp2[0] > 0)
 	{
-		tmp2[0] = reru(tmp2[0] / eg(fl_wat)) * eg(fl_wat);
+		tmp2[0] = reru(tmp2[0] / flt[me_x][me_y][fl_wat] * 0.5) * flt[me_x][me_y][fl_wat];
 		*egw(fl_wat) -= tmp2[0];
 		*vsw(fl_wat) += tmp2[0];
 	}

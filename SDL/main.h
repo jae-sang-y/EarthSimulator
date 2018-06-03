@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable:4244)
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_image.h>
@@ -69,7 +70,7 @@ std::string public_string = "";
 void set_rect(SDL_Rect*, int, int, int, int);
 void set_rect(SDL_Rect*, int, int);
 int T = 0;
-const int T_max = pow(2 * 3 * 5 * 7 * 11, 5);
+const int T_max = (int)pow(2 * 3 * 5 * 7 * 11, 5);
 
 ///////////////////////////
 //         COLOR         //
