@@ -1,6 +1,7 @@
 #pragma once
 #include "main.h"
 #include "calc.h"
+#include "map_con.h"
 
 void event(SDL_Event *e)
 {
@@ -56,43 +57,8 @@ void event(SDL_Event *e)
 
 void map_set()
 {
-	for (int a = 0; a < map_w; a++)
-	{
-		for (int b = 0; b < map_h; b++)
-		{
-			for (int i = 0; i < map_opt; i++)
-			{
-				tip[a][b][i] = 0;
-				flt[a][b][i] = random();
-			}
-			flt[a][b][fl_height] = flt[a][b][fl_height] - 0.5;
-			flt[a][b][fl_wat] = flt[a][b][fl_wat] / 2;// -0.5;
-			flt[a][b][fl_wat_angle] = M_PI;
-			flt[a][b][fl_wat_speed] = 1;
-			//tip[a][b][mp_contient] = rand() % cont_num;
-		}
-	}
-	for (int i = 0; i < cont_num; i++)
-	{
-		rand_pos(&tmp[0], &tmp[1]);
-		tip[tmp[0]][tmp[1]][mp_contient] = i;
-		flt[tmp[0]][tmp[1]][fl_mass] = i;
-		flt[tmp[0]][tmp[1]][fl_press] = 0;
-		flt[tmp[0]][tmp[1]][fl_angle] = random() * M_PI *2;
-	}
-	/*fstream input((currentDir + "\\" + map_file[0]).c_str(), ios::binary | ios::in | ios::ate);
-
-	ifstream::pos_type fileSize;
-
-	char* content;
-
-	if (input.is_open())
-	{
-	fileSize = input.tellg();
-
-	}
-	input.close();*/
-
+	all_rand();
+	stair_height();
 }
 void map_step()
 {
@@ -100,128 +66,23 @@ void map_step()
 
 	for (int a = 0; a < map_w; a++)
 	{
+		me_x = a;
 		for (int b = 0; b < map_h; b++)
 		{
+			me_y = b;
 			for (int w = 0; w < 8; w++)
 			{
 				c = (a + mca_w[w][0] + map_w) % map_w;
 				d = b + mca_w[w][1];
-				if (c >= 0 && d >= 0 && c < map_w && d < map_h && rand() % 8 == 0)
+				if (c >= 0 && d >= 0 && c < map_w && d < map_h)
 				{
-					if (tip[a][b][mp_contient] > 0)
-					{
-						tmp2[1] = dir_force(flt[a][b][fl_angle], w * M_PI / 4) * flt[a][b][fl_speed];
-						if (tip[c][d][mp_contient] == 0 && flt[a][b][fl_mass] * (tmp2[1] + 1) >= 0.5)
-						{
-							tmp2[0] = reru(flt[a][b][fl_mass] / 2 + tmp2[1]);
-
-							flt[c][d][fl_angle] = flt[a][b][fl_angle];
-							flt[c][d][fl_speed] = 1;
-
-							tip[c][d][mp_contient] = tip[a][b][mp_contient];
-							flt[c][d][fl_press] = flt[a][b][fl_press];
-							flt[a][b][fl_mass] += tmp2[2];
-							flt[c][d][fl_mass] -= tmp2[2];
-						}
-						if (tip[c][d][mp_contient] == tip[a][b][mp_contient] && flt[a][b][fl_mass] * flt[a][b][fl_press] > flt[c][d][fl_mass] * flt[c][d][fl_press] && tmp2[1] > 0)
-						{
-							tmp2[0] = (flt[a][b][fl_mass] - flt[c][d][fl_mass]) / 4 * (flt[a][b][fl_press] / flt[c][d][fl_press]) + tmp2[1];
-							flt[a][b][fl_mass] -= tmp2[2];
-							flt[c][d][fl_mass] += tmp2[2];
-						}
-						if (tip[c][d][mp_contient] != tip[a][b][mp_contient] && flt[a][b][fl_mass] * flt[a][b][fl_press] > flt[c][d][fl_mass] * flt[c][d][fl_press] && tmp2[1] > 0)
-						{
-							if (flt[a][b][fl_mass] <= 0.5)
-							{
-								tmp2[2] = (flt[a][b][fl_mass] - flt[c][d][fl_mass]) / 4 * (flt[a][b][fl_press] / flt[c][d][fl_press]) + tmp2[1];
-
-								flt[c][d][fl_angle] = flt[a][b][fl_angle];
-								flt[c][d][fl_speed] = (flt[a][b][fl_press] / flt[c][d][fl_press]);
-
-								flt[a][b][fl_mass] -= tmp2[2];
-								flt[c][d][fl_mass] += tmp2[2];
-								tip[c][d][mp_contient] = tip[a][b][mp_contient];
-							}
-							else
-							{
-								tmp2[4] = flt[c][d][fl_angle];
-								flt[c][d][fl_angle] = (flt[a][b][fl_angle] * flt[a][b][fl_mass] * tmp2[1] + flt[c][d][fl_angle] * flt[c][d][fl_mass]) / (flt[a][b][fl_mass] * tmp2[1] + flt[c][d][fl_mass]);
-								flt[c][d][fl_speed] = (flt[a][b][fl_mass] * tmp2[1]) / (flt[c][d][fl_mass]) * dir_force(flt[c][d][fl_angle], tmp2[4]);
-
-
-								tmp2[2] = ((flt[a][b][fl_mass] - flt[c][d][fl_mass]) * 2 + tmp2[1] * 2);
-								flt[a][b][fl_press] -= tmp2[2];
-								flt[c][d][fl_press] += tmp2[2];
-							}
-						}
-
-
-					}
-					if (flt[a][b][fl_wat] > 0)
-					{
-						tmp2[4] = 0;
-						if (flt[a][b][fl_height] + flt[a][b][fl_wat] > flt[c][d][fl_height] + flt[c][d][fl_wat])
-						{
-							tmp2[4] += ((flt[a][b][fl_height] + flt[a][b][fl_wat] + flt[a][b][fl_moon]) - (flt[c][d][fl_height] + flt[c][d][fl_wat] + flt[a][b][fl_moon])) / 1;
-						}
-
-						if (flt[a][b][fl_wat_speed] + tmp2[4] > 0)
-						{
-							tmp2[2] = dir_force(flt[a][b][fl_wat_angle], w * M_PI / 4);
-
-							tmp2[1] = reru(flt[a][b][fl_wat_speed] * tmp2[2] + tmp2[4]);
-							tmp2[3] = tmp2[4] * reru(tmp2[1]);
-
-							flt[c][d][fl_wat] += tmp2[3];
-							flt[a][b][fl_wat] -= tmp2[3];
-
-							tmp[0] = fl_height;
-							tmp2[1] = 1;
-							flt[c][d][tmp[0]] += flt[a][b][tmp[0]] * reru(tmp2[3]) * tmp2[1];
-							flt[a][b][tmp[0]] -= flt[a][b][tmp[0]] * reru(tmp2[3]) * tmp2[1];
-						}
-					}
-					break;
+					yu_x = c;
+					yu_y = d;
+					water_flow();
 				}
 			}
-			if (flt[a][b][fl_height] > flt[c][d][fl_height] + 0.3)
-			{
-				tmp2[0] = (flt[a][b][fl_height]) - (flt[c][d][fl_height]);
-				tmp2[1] = 0.1;
-				tmp2[3] = tmp2[0] * tmp2[1];
-				flt[c][d][fl_height] += tmp2[3];
-				flt[a][b][fl_height] -= tmp2[3];
-			}
-			if (flt[a][b][fl_mass] < 1)
-			{
-				flt[a][b][fl_mass] += 0.001 * random();
-			}
-
-			if (flt[a][b][fl_press] != 1.0)
-			{
-				tmp2[0] = (flt[a][b][fl_press] - 1.0) / (1 + flt[a][b][fl_wat]) * (1 - flt[a][b][fl_height]);
-				tmp2[1] = random() * 0.001;
-				flt[a][b][fl_press] -= tmp2[0] * tmp2[1];
-				flt[a][b][fl_height] += tmp2[0] * tmp2[1];
-			}
-			if (flt[a][b][fl_height] > 1.0)
-			{
-				tmp2[0] = (flt[a][b][fl_height] - 1.0);
-				tmp2[1] = 0.01;
-				flt[a][b][fl_mass] += tmp2[0] * tmp2[1];
-				flt[a][b][fl_height] -= tmp2[0] * tmp2[1];
-			}
-
 			flt[a][b][fl_sun] = (sin((a + the_time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
 			flt[a][b][fl_moon] = abs(sin((a + the_time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
-
-			in_1_1(&flt[a][b][fl_height]);
-
-			flt[a][b][fl_wat_angle] += 0.01;
-			while (flt[a][b][fl_wat_angle] > M_PI * 2)
-			{
-				flt[a][b][fl_wat_angle] -= M_PI * 2;
-			}
 		}
 	}
 }
@@ -255,13 +116,17 @@ void map_color(unsigned char *c, int a ,int b)
 	}
 	else if (mgr == 4)
 	{
-		set_color(mgr_a, 255, 255, 255, 255);
-		set_color(mgr_b, 0, 0, 0, 255);
-		merge_color(c, mgr_a, mgr_b, 1 - (flt[a][b][fl_height] + 1) * 0.5);
+		set_color(mgr_a, 0, 0, 0, 255);
+		set_color(mgr_b, 255, 255, 255, 255);
+		merge_color(c, mgr_a, mgr_b, flt[a][b][fl_height]);
 
 		if (flt[a][b][fl_wat] > 0)
 		{
 			c[2] = 255;
+			if (flt[a][b][fl_wat] < 0.1)
+			{
+				c[1] = 255;
+			}
 		}
 
 		//√  ->≥Î ->∞• ->∫∏ ->»Ú 

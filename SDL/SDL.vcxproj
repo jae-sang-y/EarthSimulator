@@ -129,6 +129,8 @@
     <ClInclude Include="calc.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mainf.h" />
+    <ClInclude Include="map.h" />
+    <ClInclude Include="map_con.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
