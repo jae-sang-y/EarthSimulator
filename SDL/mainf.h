@@ -60,9 +60,30 @@ void map_set()
 	all_rand();
 	stair_height();
 }
+void run_ab(int a, int b)
+{
+	flt[a][b][fl_sun] = (sin((a + the_time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
+	flt[a][b][fl_moon] = abs(sin((a + the_time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
+}
+void run_abcd(int a, int b)
+{
+	static int c, d;
+	for (int w = 0; w < 8; w++)
+	{
+		//c = (a + mca_w[w][0] + map_w) % map_w;
+		c = a + mca_w[w][0];
+		d = b + mca_w[w][1];
+		if (c >= 0 && d >= 0 && c < map_w && d < map_h)
+		{
+			yu_x = c;
+			yu_y = d;
+			water_flow();
+		}
+	}
+}
+
 void map_step()
 {
-	int c, d;
 
 	for (int a = 0; a < map_w; a++)
 	{
@@ -70,20 +91,35 @@ void map_step()
 		for (int b = 0; b < map_h; b++)
 		{
 			me_y = b;
-			for (int w = 0; w < 8; w++)
-			{
-				//c = (a + mca_w[w][0] + map_w) % map_w;
-				c = a + mca_w[w][0];
-				d = b + mca_w[w][1];
-				if (c >= 0 && d >= 0 && c < map_w && d < map_h)
-				{
-					yu_x = c;
-					yu_y = d;
-					water_flow();
-				}
-			}
-			flt[a][b][fl_sun] = (sin((a + the_time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
-			flt[a][b][fl_moon] = abs(sin((a + the_time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
+			run_ab(a, b);
+		}
+	}
+	for (int a = 0; a < map_w; a++)
+	{
+		me_x = a;
+		for (int b = 0; b < map_h; b++)
+		{
+			me_y = b;
+			run_abcd(a, b);
+		}
+		for (int b = map_h - 1; b >= 0; b--)
+		{
+			me_y = b;
+			run_abcd(a, b);
+		}
+	}
+	for (int a = map_w -1; a >= 0; a--)
+	{
+		me_x = a;
+		for (int b = 0; b < map_h; b++)
+		{
+			me_y = b;
+			run_abcd(a, b);
+		}
+		for (int b = map_h - 1; b >= 0; b--)
+		{
+			me_y = b;
+			run_abcd(a, b);
 		}
 	}
 }
