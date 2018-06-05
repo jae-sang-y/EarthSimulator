@@ -182,6 +182,10 @@ void comb_vv(double *D, double *L, double d1, double l1, double d2, double l2)
 
 	*L = sqrt(pow(x,2) + pow(y,2));
 	*D = (xy2dir(x, y));
+	if (_isnan(*D))
+	{
+		*D = 0;
+	}
 
 	return;
 }

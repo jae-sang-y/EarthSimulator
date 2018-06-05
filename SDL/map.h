@@ -12,12 +12,10 @@ unsigned int tip[map_w][map_h][map_opt] = { { { 0 }, }, };
 double flt[map_w][map_h][map_opt] = { { { 0 }, }, };
 
 const int cont_num = 20;
-enum { mp_geo, mp_con, mp_contient };
+enum { mp_con };
 enum {
-	fl_food, fl_mat, fl_cst,
-	fl_sun, fl_moon,
-	fl_height,  fl_angle,     fl_force,     fl_heat,//Solid
-	fl_wat, fl_wat_angle, fl_wat_force, fl_wat_heat, //Water
+	fl_food, fl_mat, fl_cst
+
 
 };
 
@@ -25,7 +23,7 @@ enum {
 //      MAP GRAPHICS     //
 ///////////////////////////
 
-unsigned int mgr = 4;
+unsigned int mgr = 1;
 const unsigned int mgr_size = 5;
 unsigned char mgr_a[4];
 unsigned char mgr_b[4];

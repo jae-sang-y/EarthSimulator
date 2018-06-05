@@ -58,12 +58,25 @@ void event(SDL_Event *e)
 void map_set()
 {
 	all_rand();
-	stair_height();
+	int length;
+	char *array;
+
+	std::ifstream stream;
+	stream.open((currentDir + "\\" + "gfx\\map\\map.bmp").c_str(), std::ios_base::binary);
+	if (!stream.bad()) {
+		length = stream.rdbuf()->pubseekoff(0, std::ios_base::end);
+		array = new char[length];
+		stream.rdbuf()->pubseekoff(0, std::ios_base::beg);
+		stream.read(array, length);
+		for (int a = 0; a < length; a++)
+		{
+			std::cout << array[a] << " " << a << " \n";
+		}
+		stream.close();
+	}
 }
 void run_ab(int a, int b)
 {
-	flt[a][b][fl_sun] = (sin((a + the_time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
-	flt[a][b][fl_moon] = abs(sin((a + the_time * map_w) / (map_w / 2.0) * M_PI)) * (1 - abs(b - (map_h / 2.0)) / (map_h / 2.0));
 }
 void run_abcd(int a, int b)
 {
@@ -78,11 +91,6 @@ void run_abcd(int a, int b)
 		{
 			yu_x = c;
 			yu_y = d;
-			if (flt[a][b][fl_wat] > 0)
-			{
-				water_flow();
-				water_go();
-			}
 		}
 	}
 }
@@ -138,23 +146,6 @@ void map_color(unsigned char *c, int a ,int b)
 		c[2] = 255;
 		c[1] = 0;
 	}
-	else if (mgr == 1)
-	{
-		c[0] = 0;
-		c[1] = 0;
-		if (flt[a][b][fl_wat] > 0.0)
-		{
-			c[2] = 255 - 127.0 * flt[a][b][fl_wat];
-			if (flt[a][b][fl_wat] > 0.00 && flt[a][b][fl_wat] < 0.0012)
-			{
-				set_color(c, 0, 255, 255, 255);
-			}
-		}
-		else
-		{
-			c[2] = 0;
-		}
-	}
 	else if (mgr == 2)
 	{
 		c[0] = 0;
@@ -166,37 +157,6 @@ void map_color(unsigned char *c, int a ,int b)
 		c[0] = 255 - 127 * flt[a][b][fl_mat] - 64;
 		c[1] = c[0];
 		c[2] = c[0];
-	}
-	else if (mgr == 4)
-	{
-		set_color(mgr_a, 0, 0, 0, 255);
-		set_color(mgr_b, 255, 255, 255, 255);
-		merge_color(c, mgr_a, mgr_b, flt[a][b][fl_height]);
-
-		if (flt[a][b][fl_wat] > 0)
-		{
-			c[2] = 255;
-			if (flt[a][b][fl_wat] < 0.1)
-			{
-				//c[1] = 255.0 * flt[a][b][fl_wat] * 10;
-				c[2] = 255.0 * flt[a][b][fl_wat] * 10;
-			}
-		}
-
-		//ÃÊ ->³ë ->°¥ ->º¸ ->Èò 
-		//.00->.25->.50->.75->1.00
-	}
-	else if (mgr == 5)
-	{
-		set_color(mgr_a, 255, 255, 255, 255);
-		set_color(mgr_b, 0, 0, 0, 255);
-		merge_color(c, mgr_a, mgr_b, 1 - (flt[a][b][fl_height] + 1) * 0.5);
-	}
-	else if (mgr == 7)
-	{
-		set_color(mgr_a, 255, 255, 255, 255);
-		set_color(mgr_b, 0, 0, 255, 255);
-		merge_color(c, mgr_a, mgr_b, flt[a][b][fl_moon]);
 	}
 	else
 	{
