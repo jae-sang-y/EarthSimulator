@@ -70,6 +70,7 @@ void run_abcd(int a, int b)
 	static int c, d;
 	for (int w = 0; w < 8; w++)
 	{
+		mw = w;
 		//c = (a + mca_w[w][0] + map_w) % map_w;
 		c = a + mca_w[w][0];
 		d = b + mca_w[w][1];
@@ -77,7 +78,11 @@ void run_abcd(int a, int b)
 		{
 			yu_x = c;
 			yu_y = d;
-			water_flow();
+			if (flt[a][b][fl_wat] > 0)
+			{
+				water_flow();
+				water_go();
+			}
 		}
 	}
 }
@@ -137,7 +142,18 @@ void map_color(unsigned char *c, int a ,int b)
 	{
 		c[0] = 0;
 		c[1] = 0;
-		c[2] = 255 * flt[a][b][fl_wat];
+		if (flt[a][b][fl_wat] > 0.0)
+		{
+			c[2] = 255 - 127.0 * flt[a][b][fl_wat];
+			if (flt[a][b][fl_wat] > 0.00 && flt[a][b][fl_wat] < 0.0012)
+			{
+				set_color(c, 0, 255, 255, 255);
+			}
+		}
+		else
+		{
+			c[2] = 0;
+		}
 	}
 	else if (mgr == 2)
 	{
@@ -162,7 +178,8 @@ void map_color(unsigned char *c, int a ,int b)
 			c[2] = 255;
 			if (flt[a][b][fl_wat] < 0.1)
 			{
-				c[1] = 255;
+				//c[1] = 255.0 * flt[a][b][fl_wat] * 10;
+				c[2] = 255.0 * flt[a][b][fl_wat] * 10;
 			}
 		}
 
@@ -175,28 +192,11 @@ void map_color(unsigned char *c, int a ,int b)
 		set_color(mgr_b, 0, 0, 0, 255);
 		merge_color(c, mgr_a, mgr_b, 1 - (flt[a][b][fl_height] + 1) * 0.5);
 	}
-	else if (mgr == 6)
-	{
-		set_color(mgr_a, 255, 255, 255, 255);
-		set_color(mgr_b, 0, 255, 0, 255);
-		merge_color(c, mgr_a, mgr_b, flt[a][b][fl_gas]);
-	}
 	else if (mgr == 7)
 	{
 		set_color(mgr_a, 255, 255, 255, 255);
 		set_color(mgr_b, 0, 0, 255, 255);
 		merge_color(c, mgr_a, mgr_b, flt[a][b][fl_moon]);
-	}
-	else if (mgr == 8)
-	{
-		set_color(c,0,0,0,255);
-		if (tip[a][b][mp_contient] > 0)
-		{
-			set_color(mgr_a, 255, 255, 255, 255);
-			hsv_to_rgb(mgr_b, (1.0 / cont_num) * tip[a][b][mp_contient]);
-			merge_color(c, mgr_a, mgr_b, flt[a][b][fl_mass]);
-		}
-
 	}
 	else
 	{

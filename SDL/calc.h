@@ -143,3 +143,45 @@ void hsv_to_rgb(unsigned char *cc, double h)
 	cc[2] = (unsigned char)c[2];
 	cc[3] = (unsigned char)c[3];
 }
+
+double xy2dir(double x, double y)
+{
+	if (x == 0)
+	{
+		if (y > 0)
+		{
+			return M_PI / 2;
+		}
+		else if (y < 0)
+		{
+			return M_PI / 2 * 3;
+		}
+	}
+	else if (x < 0)
+	{
+		return atan(y / x) + M_PI;
+	}
+	else
+	{
+		if (y >= 0)
+		{
+			return atan(y / x);
+		}
+		else if (y < 0)
+		{
+			return atan(y / x) + 2 * M_PI;
+		}
+	}
+}
+
+void comb_vv(double *D, double *L, double d1, double l1, double d2, double l2)
+{
+	double x, y;
+	x = l1 * sin(d1) + l2 * sin(d2);
+	y = l1 * cos(d1) + l2 * cos(d2);
+
+	*L = sqrt(pow(x,2) + pow(y,2));
+	*D = (xy2dir(x, y));
+
+	return;
+}

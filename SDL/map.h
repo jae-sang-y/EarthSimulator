@@ -16,9 +16,9 @@ enum { mp_geo, mp_con, mp_contient };
 enum {
 	fl_food, fl_mat, fl_cst,
 	fl_sun, fl_moon,
-	fl_height, fl_heat, fl_mass, fl_press, fl_angle, fl_speed,//Solid
-	fl_wat, fl_wat_angle, fl_wat_speed, fl_wat_heat, fl_wat_mat, //Water
-	fl_gas, fl_gas_angle, fl_gas_heat //Gas
+	fl_height,  fl_angle,     fl_force,     fl_heat,//Solid
+	fl_wat, fl_wat_angle, fl_wat_force, fl_wat_heat, //Water
+
 };
 
 ///////////////////////////\
@@ -36,7 +36,7 @@ double the_time = 0;
 ///////////////////////////
 
 const int mca_w[8][2] = { { 1,0 },{ 1, -1 },{ 0, -1 },{ -1,-1 },{ -1,0 },{ -1, 1 },{ 0,1 },{ 1,1 } };
-int me_x = 0, me_y = 0, yu_x = 0, yu_y = 0;
+int me_x = 0, me_y = 0, yu_x = 0, yu_y = 0, mw = 0;
 
 ///////////////////////////
 //          TEMP         //
