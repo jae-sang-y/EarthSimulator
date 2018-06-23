@@ -58,25 +58,19 @@ void event(SDL_Event *e)
 void map_set()
 {
 	all_rand();
-	int length;
-	char *array;
-
-	std::ifstream stream;
-	stream.open((currentDir + "\\" + "gfx\\map\\map.bmp").c_str(), std::ios_base::binary);
-	if (!stream.bad()) {
-		length = stream.rdbuf()->pubseekoff(0, std::ios_base::end);
-		array = new char[length];
-		stream.rdbuf()->pubseekoff(0, std::ios_base::beg);
-		stream.read(array, length);
-		for (int a = 0; a < length; a++)
-		{
-			std::cout << array[a] << " " << a << " \n";
-		}
-		stream.close();
-	}
+	set_geo();
+	get_geo();
+	get_sun();
+	set_con();
 }
 void run_ab(int a, int b)
 {
+	grow();
+	tip[a][b][grp_con_border] = 0;
+}
+void run_ab_end(int a, int b)
+{
+
 }
 void run_abcd(int a, int b)
 {
@@ -91,6 +85,24 @@ void run_abcd(int a, int b)
 		{
 			yu_x = c;
 			yu_y = d;
+			get_conquer();
+		}
+	}
+}
+void run_abcd_once(int a, int b)
+{
+	static int c, d;
+	for (int w = 0; w < 8; w++)
+	{
+		mw = w;
+		//c = (a + mca_w[w][0] + map_w) % map_w;
+		c = a + mca_w[w][0];
+		d = b + mca_w[w][1];
+		if (c >= 0 && d >= 0 && c < map_w && d < map_h)
+		{
+			yu_x = c;
+			yu_y = d;
+			set_border();
 		}
 	}
 }
@@ -105,6 +117,7 @@ void map_step()
 		{
 			me_y = b;
 			run_ab(a, b);
+			run_abcd_once(a, b);
 		}
 	}
 	for (int a = 0; a < map_w; a++)
@@ -135,6 +148,15 @@ void map_step()
 			run_abcd(a, b);
 		}
 	}
+	for (int a = 0; a < map_w; a++)
+	{
+		me_x = a;
+		for (int b = 0; b < map_h; b++)
+		{
+			me_y = b;
+			run_ab_end(a, b);
+		}
+	}
 }
 
 void map_color(unsigned char *c, int a ,int b)
@@ -142,19 +164,63 @@ void map_color(unsigned char *c, int a ,int b)
 	c[3] = 255;
 	if (mgr == 0)
 	{
-		c[0] = 0;
-		c[2] = 255;
-		c[1] = 0;
+		set_color(c, 255, 0, 255, 255);
+		if (tip[a][b][mp_geo] > 0)
+		{
+			geo_list[tip[a][b][mp_geo] - 1].set_ant_color(c);
+		}
+	}
+	else if (mgr == 1)
+	{
+		set_color(c, 255, 0, 255, 255);
+		if (tip[a][b][mp_geo] > 0)
+		{
+			geo_list[tip[a][b][mp_geo] - 1].set_ant_color(c);
+		}
+		if (tip[a][b][mp_con] > 0)
+		{
+			hsv_to_rgb(mgr_a, tip[a][b][mp_con] * 1.0 / (con_num));
+			set_color(c, 0, 0, 0, 255);
+			merge_color(c, mgr_a, c, tip[a][b][grp_con_border] / 8.0 / 2 + 0.25);
+			if (geo_list[tip[a][b][mp_geo] - 1].bild_eff == 0)
+			{
+				geo_list[tip[a][b][mp_geo] - 1].set_ant_color(c);
+				merge_color(c, mgr_a, c, 0.8);
+				if (tip[a][b][grp_con_border] > 1 && tip[a][b][grp_con_border] <= 5)
+				{
+					merge_color(c, mgr_a, c, 0.5);
+					set_color(c, 0, 0, 0, 255);
+					merge_color(c, mgr_a, c, 0.5);
+				}
+			}
+			else if (tip[a][b][grp_con_border] == 0)
+			{
+				c[0] = mgr_a[0];
+				c[1] = mgr_a[1];
+				c[2] = mgr_a[2];
+			}
+		}
 	}
 	else if (mgr == 2)
 	{
-		c[0] = 0;
-		c[1] = 255 * flt[a][b][fl_food];
-		c[2] = 0;
+		set_color(c, tip[a][b][mp_sun], tip[a][b][mp_sun], tip[a][b][mp_sun], 255);
 	}
 	else if (mgr == 3)
 	{
+		c[1] = 255 * reru(flt[a][b][fl_food] / 1000.0);
+		c[2] = 0;
+		c[0] = 0;
+		if (flt[a][b][fl_food] == 0) { set_color(c,255,255,255,255); }
+	}
+	else if (mgr == 4)
+	{
 		c[0] = 255 - 127 * flt[a][b][fl_mat] - 64;
+		c[1] = c[0];
+		c[2] = c[0];
+	}
+	else if (mgr == 5)
+	{
+		c[0] = 255 ;
 		c[1] = c[0];
 		c[2] = c[0];
 	}

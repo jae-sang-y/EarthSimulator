@@ -189,3 +189,8 @@ void comb_vv(double *D, double *L, double d1, double l1, double d2, double l2)
 
 	return;
 }
+
+const int c2i(const int r, const int g, const int b)
+{
+	return r * 256 * 256 + g * 256 + b;
+}

@@ -1,4 +1,4 @@
-#include "mainf.h"
+﻿#include "mainf.h"
 
 int main(int argc, char* args[])
 {
@@ -18,29 +18,41 @@ int main(int argc, char* args[])
 		else
 		{
 			//SDL_Delay(20000);
+			start();
 			SDL_Event e;
+			std::thread trd_ui(ui, &e);
+			std::thread trd_step(step);
+
 			while (!quit)
 			{
 				event(&e);
-				step();
-				draw();
+				//step();
+				
+				//ui(&e);
 			}
+			trd_ui.join();
+			trd_step.join();
+			
 		}
 	}
-
 	close();
-
 	LOG_Stop();
-
 	return 0;
 }
 
+void start()
+{
+	msg.push_back(Message(msg_show, 200,70,"1972년 11월 21일"));
+}
 void step()
 {
-	map_step();
-	T = (++T) % T_max;
-	the_time = (the_time + 0.003);
-	if (the_time > 1) { the_time -= 1; }
+	while(!quit)
+	{
+		map_step();
+		T = (++T) % T_max;
+		the_time = (the_time + 0.0003);
+		if (the_time > 1) { the_time -= 1; }
+	}
 	//Mix_PlayMusic(gMusic, 0);
 }
 void draw()
@@ -51,14 +63,9 @@ void draw()
 
 	SDL_Texture* t = NULL;
 	SDL_Rect r;
-	set_rect(&r, 0, 0, 100, 100);
 
-	//SDL_RenderCopy(REND, sprite[2], NULL, NULL);
-
-	//public_string = "Fuck you";
 	unsigned char color[4];
-	//t = draw_string(c_black);
-	//SDL_RenderCopy(REND, t, NULL, &r);
+	
 	for (int a = 0; a < map_w; a++)
 	{
 		for (int b = 0; b < map_h; b++)
@@ -76,16 +83,96 @@ void draw()
 			//SDL_RenderCopy(REND, sprite[2], NULL, &r);
 		}
 	}
-	/*if (Say == 0)
+}
+void ui(SDL_Event *e)
+{
+	SDL_Rect r;
+	int x, y;
+	while(!quit)
 	{
-		SDL_RenderCopy(REND, sprite[0], NULL, &r);
-	}
-	else
-	{
-		SDL_RenderCopy(REND, sprite[1], NULL, &r);
-	}*/
-	SDL_RenderPresent(REND);
+		draw();
+		if (msg.size() > 0)
+		{
+			SDL_GetMouseState(&x, &y);
+			if (e->type == SDL_MOUSEBUTTONDOWN)
+			{
+				global[glb_mousesx] = x;
+				global[glb_mousesy] = y;
+				bool effect = true;
+				for (int a = 0; a < msg.size(); a++)
+				{
+					if (x > msg[a].x && y > msg[a].y && x < msg[a].x + msg[a].w && y < msg[a].y + 20 && effect)
+					{
+						msg[a].selected = true;
+						global[glb_mousebx] = msg[a].x;
+						global[glb_mouseby] = msg[a].y;
+						effect = false;
+						break;
+					}
+				}
+			}
+			else if (e->type == SDL_MOUSEMOTION)
+			{
+				if (msg.size() > 0)
+				{
+					for (int a = 0; a < msg.size(); a++)
+					{
+						if (msg[a].selected)
+						{
+							msg[a].x = x - global[glb_mousesx] + global[glb_mousebx];
+							msg[a].y = y - global[glb_mousesy] + global[glb_mouseby];
+							break;
+						}
+					}
+				}
+			}
+			else if (e->type == SDL_MOUSEBUTTONUP)
+			{
+				for (int a = 0; a < msg.size(); a++)
+				{
+					msg[a].selected = false;
+				}
+			}
+			global[glb_mousex] = x;
+			global[glb_mousey] = y;
+			for (int a = 0; a < msg.size(); a++)
+			{
+				set_rect(&r, msg[a].x, msg[a].y, msg[a].w, msg[a].h);
+				SDL_RenderCopy(REND, sprite[8], NULL, &r);
 
+				//SDL_SetRenderDrawColor(REND, 255, 255, 255, 255); 
+				//SDL_RenderFillRect(REND, &r);
+				set_rect(&r, msg[a].x, msg[a].y, msg[a].w, 20);
+				if (msg[a].selected)
+				{
+					SDL_RenderCopy(REND, sprite[8], NULL, &r);
+				}
+
+				SDL_Texture* draw_text = draw_string(msg[a].sub, c_black);
+				SDL_QueryTexture(draw_text, NULL, NULL, &r.w, &r.h);
+				r.x += (msg[a].w - r.w) / 2;
+				SDL_RenderCopy(REND, draw_text, NULL, &r);
+				r.x -= (msg[a].w - r.w) / 2;
+
+				r.y = msg[a].y + msg[a].h / 2 - 20;
+				draw_text = draw_string("신정우는 오렌지병으로 사망했다.", c_black);
+				SDL_QueryTexture(draw_text, NULL, NULL, &r.w, &r.h);
+				r.x += (msg[a].w - r.w) / 2;
+				SDL_RenderCopy(REND, draw_text, NULL, &r);
+				r.x -= (msg[a].w - r.w) / 2;
+			}
+		}
+		SDL_RenderPresent(REND);
+	}
+	
+}
+
+
+SDL_Texture* draw_string(std::string s, SDL_Color color) {
+
+	SDL_Texture* t = SDL_CreateTextureFromSurface(REND, TTF_RenderUTF8_Solid(def_font, s.c_str(), color));
+	
+	return t;
 }
 
 void set_rect(SDL_Rect *r, int x, int y, int w, int h)
@@ -100,22 +187,10 @@ void set_rect(SDL_Rect *r, int x, int y)
 	r->x = x;
 	r->y = y;
 }
-SDL_Texture* draw_string(SDL_Color fg)
-{
-	TTF_Font* ft = def_font;
-	SDL_Surface* textSurface = TTF_RenderText_Solid(def_font, "Fuck", fg);
-	if (textSurface == NULL)
-	{
-		LOG_W("Failed Draw String : ", TTF_GetError());
-	}
-	static SDL_Texture *temp_texture = SDL_CreateTextureFromSurface(REND, textSurface);
-	SDL_FreeSurface(textSurface);
-	//ft = NULL;
-	return temp_texture;
-}
 
 bool init()
 {
+	setlocale(LC_ALL, "");
 	char curDir[1000];
 	_getcwd(curDir, 1000);
 	currentDir = curDir;
@@ -159,7 +234,7 @@ bool loadMedia()
 {
 	bool success = true;
 
-	def_font = TTF_OpenFont((currentDir + "\\" + "ttf\\consola.ttf").c_str(), 28);
+	def_font = TTF_OpenFont((currentDir + "\\" + "ttf\\NanumSquareR.ttf").c_str(), 20);
 
 	gMusic = Mix_LoadMUS((currentDir + "\\" + "music\\test.wav").c_str());
 	if (gMusic == NULL)
@@ -287,6 +362,6 @@ void LOG_Stop()
 {
 	std::string a;
 	std::cout << "Press Any Key to Continue...";
-	getchar();
+	std::cin.ignore();
 	return;
 }

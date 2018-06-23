@@ -14,6 +14,9 @@
 #include <vector>
 #include <cmath>
 #include <ctime>
+#include <thread>
+#pragma execution_character_set("utf-8")
+
 #include "map.h"
 
 const int SCREEN_WIDTH = 1920;
@@ -21,6 +24,8 @@ const int SCREEN_HEIGHT = 1080;
 const int MAX_SPRITE = 16;
 const int MAX_MAP = 1;
 const char ESCAPE = 0x1b;
+
+
 std::string currentDir;
 std::string sprite_file[MAX_SPRITE] = {
 "a.bmp"
@@ -31,6 +36,7 @@ std::string sprite_file[MAX_SPRITE] = {
 , "gfx\\tile\\river.bmp"
 , "gfx\\tile\\ocean.bmp"
 , "gfx\\tile\\sea.bmp"
+, "gfx\\gui\\white_paper.bmp"
 };
 std::string map_file[MAX_MAP] = {
 	"gfx\\map\\map.bmp"
@@ -40,8 +46,10 @@ SDL_Texture* sprite[MAX_SPRITE] = {};
 SDL_Texture* texture[MAX_SPRITE] = {};
 TTF_Font *def_font = NULL;
 
+void start();
 void step();
 void draw();
+void ui(SDL_Event*);
 
 bool init();
 bool loadMedia();
@@ -65,12 +73,21 @@ SDL_Renderer* REND;
 
 Mix_Music *gMusic = NULL;
 
-SDL_Texture* draw_string(SDL_Color);
-std::string public_string = "";
+SDL_Texture* draw_string(std::string, SDL_Color);
 void set_rect(SDL_Rect*, int, int, int, int);
 void set_rect(SDL_Rect*, int, int);
 int T = 0;
 const int T_max = (int)pow(2 * 3 * 5 * 7 * 11, 5);
+int global[100];
+enum {
+	glb_mousex,
+	glb_mousey,
+	glb_mousesx,
+	glb_mousesy,
+	glb_mousebx,
+	glb_mouseby,
+	glb_mouseps
+};
 
 ///////////////////////////
 //         COLOR         //
@@ -85,3 +102,26 @@ SDL_Color c_white = { 255, 255, 255 };
 ///////////////////////////
 
 bool quit = false;
+
+enum {
+	msg_show
+};
+class Message {
+public:
+	unsigned int id = 0;
+	unsigned int x = 0;
+	unsigned int y = 0;
+	unsigned int w = 400;
+	unsigned int h = 300;
+	bool selected = false;
+	Message(unsigned i, unsigned int a_x, unsigned int a_y, std::string s){
+		id = i;
+		x = a_x;
+		y = a_y;
+		sub = s;
+	}
+	std::string sub = "";
+
+};
+
+std::vector<Message> msg;
