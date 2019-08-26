@@ -292,7 +292,7 @@ void map_color(unsigned char *c, int a ,int b)
 		{
 			set_color(mgr_a, 255, 255, 255, 255);
 			hsv_to_rgb(mgr_b, (1.0 / cont_num) * tip[a][b][mp_contient]);
-			merge_color(c, mgr_a, mgr_b, flt[a][b][fl_mass]);
+			merge_color(c, mgr_a, mgr_b, flt[a][b	][fl_mass]);
 		}
 
 	}

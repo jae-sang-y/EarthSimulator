@@ -22,32 +22,32 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{7E0A96F8-DA0E-4478-BDAC-555A678897DC}</ProjectGuid>
     <RootNamespace>SDL</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>B:\SDL2-devel-2.0.8-VC\SDL2_ttf-2.0.14\include;B:\SDL2-devel-2.0.8-VC\SDL2_mixer-2.0.2\include;B:\SDL2-devel-2.0.8-VC\SDL2_image-2.0.3\include;B:\SDL2-devel-2.0.8-VC\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
-    <LibraryPath>B:\SDL2-devel-2.0.8-VC\SDL2_ttf-2.0.14\lib\x64;B:\SDL2-devel-2.0.8-VC\SDL2_mixer-2.0.2\lib\x64;B:\SDL2-devel-2.0.8-VC\SDL2_image-2.0.3\lib\x64;B:\SDL2-devel-2.0.8-VC\SDL2-2.0.8\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>B:\SDL2-devel-2.0.8-VC\SDL2_ttf-2.0.14\include;B:\SDL2-devel-2.0.8-VC\SDL2_mixer-2.0.2\include;B:\SDL2-devel-2.0.8-VC\SDL2_image-2.0.3\include;E:\SDL2-devel-2.0.10-VC\SDL2-2.0.10\include;B:\SDL2-devel-2.0.8-VC\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\SDL2-devel-2.0.10-VC\SDL2-2.0.10\lib\x64;B:\SDL2-devel-2.0.8-VC\SDL2_ttf-2.0.14\lib\x64;B:\SDL2-devel-2.0.8-VC\SDL2_mixer-2.0.2\lib\x64;B:\SDL2-devel-2.0.8-VC\SDL2_image-2.0.3\lib\x64;B:\SDL2-devel-2.0.8-VC\SDL2-2.0.8\lib\x64;$(LibraryPath)</LibraryPath>
     <LibraryWPath>B:\SDL2-devel-2.0.8-VC\SDL2-2.0.8\lib\x64;$(LibraryWPath)</LibraryWPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
