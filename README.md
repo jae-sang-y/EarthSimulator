@@ -30,10 +30,7 @@
 
 
 ## 필요한 라이브러리
-SDL 2.0 <https://www.libsdl.org>
-
-SDL_mixer 2.0 <https://www.libsdl.org/projects/SDL_mixer>
-
-SDL_image 2.0 <https://www.libsdl.org/projects/SDL_image>
-
-SDL_ttf 2.0 <https://www.libsdl.org/projects/SDL_ttf>
+SDL 2.0 <https://www.libsdl.org>  
+SDL_mixer 2.0 <https://www.libsdl.org/projects/SDL_mixer>  
+SDL_image 2.0 <https://www.libsdl.org/projects/SDL_image>  
+SDL_ttf 2.0 <https://www.libsdl.org/projects/SDL_ttf>  
