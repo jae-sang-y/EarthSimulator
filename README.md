@@ -1,5 +1,9 @@
 # Earth Simulator
-<iframe src="https://www.youtube.com/embed/Ahyvx2sbkmE"></iframe>
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=Ahyvx2sbkmE" target="_blank"><img src="http://img.youtube.com/vi/Ahyvx2sbkmE/0.jpg" >  
+Click to Play Video on Youtube  
+
+## 소개
 
 지구 판구조론 시뮬레이터입니다.
 이전의 [PlateSimulator](https://github.com/apple01644/PlateSimulator) 에서
