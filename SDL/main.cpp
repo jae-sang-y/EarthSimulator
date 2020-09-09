@@ -1,4 +1,9 @@
 #include "mainf.h"
+#pragma comment(lib, "SDL2.lib")
+#pragma comment(lib, "SDL2_ttf.lib")
+#pragma comment(lib, "SDL2_image.lib")
+#pragma comment(lib, "SDL2_mixer.lib")
+#undef main
 
 int main(int argc, char* args[])
 {
